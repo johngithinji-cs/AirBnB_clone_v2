@@ -26,12 +26,14 @@ class FileStorage:
         Otherwise, returns the __objects dictionary.
         """
         if cls is not None:
-            return self.__objects
-        else:
+            if type(cls) == str:
+                cls = eval(cls)
+            cls_dict = {}
             for k, v in self.__objects.items():
-                if cls.__name__ in k:
-                    my_dict[k] = v
-                return my_dict
+                if type(v) == cls:
+                    cls_dict[k] = v
+            return cls_dict
+        return self.__objects
 
     def new(self, obj):
         """Set in __objects obj with key <obj_class_name>.id."""
