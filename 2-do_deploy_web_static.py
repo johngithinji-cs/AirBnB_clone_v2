@@ -29,17 +29,16 @@ def do_deploy(archive_path):
     f = temp0[0]
 
     try:
-        put(archive_path, '/tmp')
-        run("sudo mkdir -p /data/web_static/releases/" + f + "/")
-        run("sudo tar -xzf /tmp/" + f + ".tgz" +
-            " -C /data/web_static/releases/" + f + "/")
-        run("sudo rm /tmp/" + f + ".tgz")
-        run("sudo mv /data/web_static/releases/" + f +
-            "/web_static/* /data/web_static/releases/" + f + "/")
-        run("sudo rm -rf /data/web_static/releases/" + f + "/web_static")
-        run("sudo rm -rf /data/web_static/current")
-        run("sudo ln -s /data/web_static/releases/" + f +
-            "/ /data/web_static/current")
+        put(archive_path, "/{}.tgz".format(f))
+        run("mkdir -p /data/web_static/releases/{}/".format(f))
+        run("tar -xzf /tmp/{}.tgz" -C /data/web_static/releases/{}/".format(f,f))
+        run("rm /tmp/{}.tgz".format(f))
+        run("mv /data/web_static/releases/{}"
+            "/web_static/* /data/web_static/releases/{}".format(f,f))
+        run("rm -rf /data/web_static/releases/{}//web_static".format(f))
+        run("rm -rf /data/web_static/current")
+        run("ln -s /data/web_static/releases/{}//data/web_static/current".format(f))
+        print("New version deployed!")
         return True
     except:
         return False
