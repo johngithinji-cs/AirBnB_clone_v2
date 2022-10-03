@@ -27,12 +27,13 @@ def do_deploy(archive_path):
     if not os.path.exists(archive_path) and not os.path.isfile(archive_path):
         return False
 
-    temp = archive_path.split('/')
+    filename = os.path.basename(archive_path)
+    temp = '/tmp/' + filename
     temp0 = temp[1].split(".")
     f = temp0[0]
 
     try:
-        put(archive_path, '/tmp')
+        put(archive_path, temp)
         run("sudo mkdir -p /data/web_static/releases/" + f + "/")
         run("sudo tar -xzf /tmp/" + f + ".tgz" +
             " -C /data/web_static/releases/" + f + "/")
