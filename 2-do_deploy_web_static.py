@@ -1,62 +1,50 @@
 #!/usr/bin/python3
-"""distributes an archive to your web servers, using the function do_deploy:"""
-
-from fabric.operations import local, run, put, sudo
-from datetime import datetime
+"""Fab script"""
 import os
-from fabric.api import env
-import re
+from datetime import datetime
+from fabric.api import *
 
-
-env.hosts = ['34.226.233.255', '3.236.245.170']
+env.hosts = ["34.226.233.255", "3.236.245.170"]
+env.user = "ubuntu"
+env.key_filename = "~/.ssh/holberton"
+env.warn_only = True
 
 
 def do_pack():
-    """Function to compress files in an archive"""
+    """Packs web_static into tgz"""
+    current_time = datetime.now().strftime("%Y%m%d%H%M%S")
+    file_path = "versions/web_static_" + current_time + ".tgz"
     local("mkdir -p versions")
-    result = local("tar -cvzf versions/web_static_{}.tgz web_static"
-                   .format(datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")),
-                   capture=True)
-    if result.failed:
+    local("tar -cvzf " + file_path + " web_static")
+    if os.path.exists(file_path):
+        return file_path
+    else:
         return None
-    return result
 
 
 def do_deploy(archive_path):
-    """Function to distribute an archive to a server"""
-    if not os.path.exists(archive_path):
+    """Deploys archive to web servers"""
+    if not os.path.exists(archive_path) and not os.path.isfile(archive_path):
         return False
-    rex = r'^versions/(\S+).tgz'
-    match = re.search(rex, archive_path)
-    filename = match.group(1)
-    res = put(archive_path, "/tmp/{}.tgz".format(filename))
-    if res.failed:
+
+    temp = archive_path.split('/')
+    temp0 = temp[1].split(".")
+    f = temp0[0]
+
+    try:
+        put(archive_path, '/tmp')
+        run("sudo mkdir -p /data/web_static/releases/" + f + "/")
+        run("sudo tar -xzf /tmp/" + f + ".tgz" +
+            " -C /data/web_static/releases/" + f + "/")
+        run("sudo rm /tmp/" + f + ".tgz")
+        run("sudo mv /data/web_static/releases/" + f +
+            "/web_static/* /data/web_static/releases/" + f + "/")
+        run("sudo rm -rf /data/web_static/releases/" + f + "/web_static")
+        run("sudo rm -rf /data/web_static/current")
+        run("sudo ln -s /data/web_static/releases/" + f +
+            "/ /data/web_static/current")
+        return True
+    except:
         return False
-    res = sudo("mkdir -p /data/web_static/releases/{}/".format(filename))
-    if res.failed:
-        return False
-    res = sudo("tar -xzf /tmp/{}.tgz -C /data/web_static/releases/{}/"
-              .format(filename, filename))
-    if res.failed:
-        return False
-    res = sudo("rm /tmp/{}.tgz".format(filename))
-    if res.failed:
-        return False
-    res = sudo("mv /data/web_static/releases/{}"
-              "/web_static/* /data/web_static/releases/{}/"
-              .format(filename, filename))
-    if res.failed:
-        return False
-    res = sudo("rm -rf /data/web_static/releases/{}/web_static"
-              .format(filename))
-    if res.failed:
-        return False
-    res = sudo("rm -rf /data/web_static/current")
-    if res.failed:
-        return False
-    res = sudo("ln -s /data/web_static/releases/{}/ /data/web_static/current"
-              .format(filename))
-    if res.failed:
-        return False
-    print('New version deployed!')
+
     return True
