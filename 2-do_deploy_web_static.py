@@ -31,6 +31,7 @@ def do_deploy(archive_path):
     temp = archive_path.split('/')
     temp0 = temp[1].split(".")
     f = temp0[0]
+    filenameNoExt = os.path.splitext(filename)[0]
 
     try:
         put(archive_path, '/temp/'+f+'.tgz')
