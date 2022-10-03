@@ -28,15 +28,14 @@ def do_deploy(archive_path):
         return False
 
     filename = os.path.basename(archive_path)
-    temp = '/tmp/' + filename
+    temp = archive_path.split('/')
     temp0 = temp[1].split(".")
     f = temp0[0]
 
     try:
-        put(archive_path, temp)
-        run("sudo mkdir -p /data/web_static/releases/" + f + "/")
-        run("sudo tar -xzf /tmp/" + f + ".tgz" +
-            " -C /data/web_static/releases/" + f + "/")
+        put(archive_path, '/temp/'+f+'.tgz')
+        run("sudo mkdir -p /data/web_static/releases/" + f)
+        run("sudo tar -xzf /tmp/" + f + ".tgz"-C /data/web_static/releases/" + f + "/")
         run("sudo rm /tmp/" + f + ".tgz")
         run("sudo mv /data/web_static/releases/" + f +
             "/web_static/* /data/web_static/releases/" + f + "/")
