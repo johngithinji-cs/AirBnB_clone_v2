@@ -6,7 +6,7 @@ from fabric.api import *
 
 env.hosts = ["3.236.245.170", " 34.226.233.255"]
 env.user = "ubuntu"
-env.key_filename = "~/.ssh/holberton"
+env.key_filename = "~/.ssh/school"
 env.warn_only = True
 
 
