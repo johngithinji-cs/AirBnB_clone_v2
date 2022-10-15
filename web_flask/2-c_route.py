@@ -12,14 +12,14 @@ def hello_route():
 
 @app.route('/hbnb', strict_slashes=False)
 def hbnb_route():
-    """hbnb"""
+    """hbnb route"""
     return "HBNB"
+
 
 @app.route('/c/<text>', strict_slashes=False)
 def c_route(text):
     """c_route"""
-    return "C {}".format(text.Replace("_", " "))
-
+    return "C {}".format(text.replace("_", " "))
 
 
 if __name__ == "__main__":
