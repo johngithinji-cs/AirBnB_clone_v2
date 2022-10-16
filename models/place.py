@@ -5,9 +5,10 @@ from models.amenity import Amenity
 from models.review import Review
 from models.base_model import BaseModel, Base
 from models import storage_type
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
-from sqlalchemy.sql.schema import Table
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
+from models import storage
+from os import getenv
 
 
 if storage_type == 'db':
