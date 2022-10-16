@@ -7,10 +7,7 @@ from models.base_model import BaseModel, Base
 from models import storage_type
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.sql.schema import Table
-from os import getenv
 from sqlalchemy.orm import relationship
-from models import storage
-
 
 
 if storage_type == 'db':
@@ -22,7 +19,8 @@ if storage_type == 'db':
                           Column('amenity_id', String(60),
                                  ForeignKey('amenities.id'),
                                  primary_key=True,
-                                 nullable=False))
+                                 nullable=False)
+                          )
 
 
 class Place(BaseModel, Base):
