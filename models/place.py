@@ -5,22 +5,21 @@ from models.amenity import Amenity
 from models.review import Review
 from models.base_model import BaseModel, Base
 from models import storage_type
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
-from sqlalchemy.sql.schema import Table
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
+from models import storage
 
 
 if storage_type == 'db':
-    place_amenity = Table('place_amenity', Base.metadata,
-                          Column('place_id', String(60),
-                                 ForeignKey('places.id'),
+    place_amenity = Table("place_amenity", Base.metadata,
+                          Column("place_id", String(60),
+                                 ForeignKey("places.id"),
                                  primary_key=True,
                                  nullable=False),
-                          Column('amenity_id', String(60),
-                                 ForeignKey('amenities.id'),
+                          Column("amenity_id", String(60),
+                                 ForeignKey("amenities.id"),
                                  primary_key=True,
-                                 nullable=False)
-                          )
+                                 nullable=False))
 
 
 class Place(BaseModel, Base):
