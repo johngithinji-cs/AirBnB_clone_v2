@@ -14,7 +14,7 @@ def hbnb_filters():
     cities = storage.all('City').values()
     amenities = storage.all('Amenity').values()
     places = storage.all('Place').values()
-    return render_template('10-hbnb_filters.html', **locals())
+    return render_template('100-hbnb_filters.html', **locals())
 
 
 @app.teardown_appcontext
